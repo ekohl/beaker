@@ -126,14 +126,19 @@ module Beaker
           hypervisor.configure
         end
       end
+    end
 
-      context 'if :host_name_prefix is set' do
-        it "generates hostname with prefix" do
-          prefix = "testing-prefix-to-test-"
-          options[:host_name_prefix] = prefix
-          expect(hypervisor.generate_host_name.start_with?(prefix)).to be true
-          expect(hypervisor.generate_host_name.length - prefix.length >= 15).to be true
-        end
+    describe '#generate_host_name' do
+      let(:hypervisor) { described_class.new(hosts, options) }
+      let(:options) { {} }
+
+      it { expect(hypervisor.generate_host_name).to be_a(String).and(have_attributes(length: 15)) }
+
+      context 'with :host_name_prefix set' do
+        let(:options) { { host_name_prefix: prefix } }
+        let(:prefix) { "testing-prefix-to-test-" }
+
+        it { expect(hypervisor.generate_host_name).to be_a(String).and(start_with(prefix)).and(have_attributes(length: 15 + prefix.length)) }
       end
     end
   end

@@ -108,11 +108,10 @@ module Beaker
 
     # Generate a random string composted of letter and numbers
     # prefixed with value of {Beaker::Hypervisor::create} option :host_name_prefix
+    #
+    # @return [String] A random hostname
     def generate_host_name
-      n = CHARMAP[rand(25)] + (0...14).map { CHARMAP[rand(CHARMAP.length)] }.join
-      return @options[:host_name_prefix] + n if @options[:host_name_prefix]
-
-      n
+      "#{@options[:host_name_prefix]}#{CHARMAP[rand(25)]}" + CHARMAP.sample(14).join
     end
   end
 end
